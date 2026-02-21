@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maurice Thomas | MySpace Resume</title>
+  <style>
+    :root{
+      --blue:#0b3ea8;
+      --lightblue:#e8f0ff;
+      --border:#7aa0ff;
+      --panel:#ffffff;
+      --shadow: 0 1px 0 rgba(0,0,0,.08);
+      --text:#111;
+      --muted:#333;
+      --link:#0b57d0;
+      --orange:#f6a23a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      background: transparent;
+      color:var(--text);
+    }
+    a{color:var(--link); text-decoration:underline}
+
+    /* Video background */
+    .bgVideo{position:fixed; inset:0; z-index:-2; overflow:hidden; background:#000;}
+    /* Full-screen cover (like MySpace layouts with a background movie) */
+    .bgVideo iframe{position:absolute; top:50%; left:50%; width:100vw; height:100vh; min-width:100vw; min-height:100vh; transform:translate(-50%,-50%) scale(1.25); border:0; pointer-events:none;}
+    .bgOverlay{position:fixed; inset:0; z-index:-1; background:linear-gradient(rgba(27,87,201,.55), rgba(11,62,168,.55) 220px, rgba(240,240,240,.88) 221px);} /* keep UI readable */
+
+    /* Top "MySpace" chrome */
+    .topbar{
+      background: linear-gradient(#1b57c9, #0b3ea8);
+      color:#fff;
+      padding:10px 14px;
+      border-bottom: 3px solid #062f7e;
+    }
+    .topbar .row{max-width:980px; margin:0 auto; display:flex; gap:12px; align-items:center;}
+    .brand{font-weight:800; letter-spacing:.5px; font-size:22px;}
+    .nav{font-size:12px; opacity:.95}
+    .nav a{color:#fff; text-decoration:none; margin-right:10px}
+    .search{margin-left:auto; display:flex; gap:6px; align-items:center}
+    .search input{height:22px; width:240px; border:1px solid #062f7e; padding:0 6px; font-size:12px}
+    .search button{height:22px; border:1px solid #062f7e; background:#fff; color:#0b3ea8; font-weight:700; font-size:12px; padding:0 10px; cursor:pointer}
+
+    .subnav{
+      background:#cfe0ff;
+      border-bottom:1px solid #9bb9ff;
+      padding:6px 14px;
+    }
+    .subnav .row{max-width:980px; margin:0 auto; font-size:12px; color:#062f7e}
+    .subnav a{color:#062f7e; text-decoration:none; margin-right:12px; font-weight:700}
+
+    /* Layout */
+    .wrap{max-width:980px; margin:14px auto 40px; padding:0 14px;}
+    .grid{display:grid; grid-template-columns: 320px 1fr; gap:12px; align-items:start;}
+
+    .card{background:var(--panel); border:2px solid var(--border); box-shadow:var(--shadow)}
+    .card .hd{background:#dbe7ff; border-bottom:1px solid #9bb9ff; padding:6px 8px; font-weight:800; color:#062f7e; font-size:13px}
+    .card .bd{padding:8px}
+
+    /* Left profile */
+    .profileTop{display:flex; gap:10px}
+    .pfp{
+      width:120px; height:120px;
+      background: repeating-linear-gradient(45deg, #eee, #eee 10px, #ddd 10px, #ddd 20px);
+      border:1px solid #999;
+      display:flex; align-items:center; justify-content:center;
+      font-size:11px; color:#444;
+    }
+    .quick{font-size:12px; color:var(--muted)}
+    .quick .name{font-size:18px; font-weight:900; color:#000; margin-bottom:2px}
+    .quick .tagline{font-weight:800; margin:4px 0 8px}
+    .quick .kv{margin:3px 0}
+
+    .btns a{
+      display:block;
+      padding:6px 8px;
+      background:#f7fbff;
+      border:1px solid #9bb9ff;
+      margin:6px 0;
+      font-weight:800;
+      color:#062f7e;
+      text-decoration:none;
+      text-align:center;
+      font-size:12px;
+    }
+
+    .twoCols{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+
+    .top8{display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;}
+    .top8 .friend{display:block; text-align:center; text-decoration:none; color:#062f7e; font-weight:800;}
+    .top8 img{width:64px; height:64px; border:1px solid #9bb9ff; background:#fff; display:block; margin:0 auto 4px;}
+    .top8 .friend div{font-size:11px; line-height:1.1;}
+    .pill{
+      border:1px solid #9bb9ff;
+      background:#f7fbff;
+      padding:6px;
+      font-size:12px;
+      min-height:84px;
+    }
+    .pill .t{font-weight:900; color:#062f7e; margin-bottom:4px; font-size:12px}
+    .pill ul{margin:0; padding-left:16px}
+    .pill li{margin:0 0 2px 0}
+
+    /* Right side */
+    .hero{
+      display:flex; align-items:center; justify-content:center;
+      border:3px solid #000;
+      background:#fff;
+      padding:12px;
+      text-align:center;
+      font-weight:900;
+      font-size:18px;
+    }
+
+    .post a{font-weight:800}
+    .post .line{padding:4px 0; border-bottom:1px solid #eee; font-size:13px}
+
+    .aboutMe{
+      border:2px solid #f0c27a;
+    }
+    .aboutMe .hd{background: #ffe3bf; border-bottom:1px solid #f0c27a; color:#7a3d00;}
+
+    .resume h3{margin:8px 0 4px; font-size:13px; text-transform:uppercase; letter-spacing:.3px; color:#062f7e}
+    .resume .role{display:flex; justify-content:space-between; gap:10px; font-weight:900; font-size:13px; margin-top:8px}
+    .resume .role span{font-weight:700; color:#222}
+    .resume ul{margin:4px 0 0 0; padding-left:18px}
+    .resume li{margin:0 0 3px 0; font-size:12.8px}
+    .resume .skillsLine{font-size:12.8px; margin:4px 0}
+
+    .blink{animation: blink 1.1s steps(2, start) infinite; color:#c00;}
+    @keyframes blink{to{visibility:hidden}}
+
+    /* Print-friendly */
+    @media print{
+      body{background:#fff}
+      .topbar,.subnav{display:none}
+      .wrap{margin:0}
+      .card{border:1px solid #999}
+      a{text-decoration:none; color:#000}
+    }
+  </style>
+</head>
+<body>
+  <!-- Background video (muted) -->
+  <div class="bgVideo" aria-hidden="true">
+    <iframe
+      src="https://www.youtube.com/embed/8uT3mm2bN1g?autoplay=1&mute=1&controls=0&loop=1&playlist=8uT3mm2bN1g&modestbranding=1&playsinline=1&rel=0&disablekb=1"
+      title="Background video"
+      frameborder="0"
+      allow="autoplay; encrypted-media; fullscreen"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div class="bgOverlay" aria-hidden="true"></div>
+
+  <div class="topbar">
+    <div class="row">
+      <div class="brand">MySpace.com</div>
+      <div class="nav">
+        <a href="#">Home</a>
+        <a href="#">Browse</a>
+        <a href="#">Search</a>
+        <a href="#">Invite</a>
+        <a href="#">Mail</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="search">
+        <input value="search the web" />
+        <button>Search</button>
+      </div>
+    </div>
+  </div>
+  <div class="subnav">
+    <div class="row">
+      <a href="#">Profile</a>
+      <a href="#">Friends</a>
+      <a href="#">Music</a>
+      <a href="#">Videos</a>
+      <a href="#">Groups</a>
+      <a href="#">Events</a>
+      <a href="#">Classifieds</a>
+      <span class="blink">NEW!</span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid">
+
+      <!-- LEFT COLUMN -->
+      <div>
+        <div class="card">
+          <div class="bd">
+            <div class="profileTop">
+              <div class="pfp" style="padding:0; overflow:hidden;">
+                <img src="maurice-profile.jpg" alt="Maurice Thomas" style="width:100%; height:100%; object-fit:cover; display:block;" />
+              </div>
+              <div class="quick">
+                <div class="name">Maurice Thomas</div>
+                <div class="tagline">Tech / Startup (Remote) — Automation • AI Media • Software Dev</div>
+                <div class="kv"><strong>Location:</strong> Austin, TX / Remote</div>
+                <div class="kv"><strong>GitHub:</strong> <a href="https://github.com/dktrn9ne">github.com/dktrn9ne</a></div>
+                <div class="kv"><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/mrt45">linkedin.com/in/mrt45</a></div>
+                <div class="kv"><strong>Email:</strong> <a href="mailto:mrthomaslmg@gmail.com">mrthomaslmg@gmail.com</a></div>
+              </div>
+            </div>
+
+            <div class="btns" style="margin-top:10px">
+              <a href="mailto:mrthomaslmg@gmail.com">Send Message</a>
+              <a href="https://github.com/dktrn9ne">Add to Friends</a>
+              <a href="#resume">View Resume</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div class="hd">Maurice's Top 8</div>
+          <div class="bd" style="font-size:12px">
+            <div class="muted" style="margin-bottom:6px">(classic MySpace tiles)</div>
+            <div class="top8">
+              <a class="friend" href="#" title="Gary Vee">
+                <img alt="Gary Vee" src="top8/garyvee.jpg" />
+                <div>Gary Vee</div>
+              </a>
+              <a class="friend" href="#" title="Slawn">
+                <img alt="Slawn" src="top8/slawn.jpg" />
+                <div>Slawn</div>
+              </a>
+              <a class="friend" href="#" title="Virgil Abloh">
+                <img alt="Virgil Abloh" src="top8/virgil.jpg" />
+                <div>Virgil Abloh</div>
+              </a>
+              <a class="friend" href="#" title="Tremaine Emory">
+                <img alt="Tremaine Emory" src="top8/tremaine.jpg" />
+                <div>Tremaine Emory</div>
+              </a>
+              <a class="friend" href="#" title="Lamorne Morris">
+                <img alt="Lamorne Morris" src="top8/ryanleslie.jpg" />
+                <div>Lamorne Morris</div>
+              </a>
+              <a class="friend" href="#" title="Larussell">
+                <img alt="Larussell" src="top8/larussell.jpg" />
+                <div>Larussell</div>
+              </a>
+              <a class="friend" href="#" title="Russ">
+                <img alt="Russ" src="top8/lamorne.jpg" />
+                <div>Russ</div>
+              </a>
+              <a class="friend" href="#" title="Ryan Leslie">
+                <img alt="Ryan Leslie" src="top8/russ.jpg" />
+                <div>Ryan Leslie</div>
+              </a>
+            </div>
+            <div class="muted" style="margin-top:6px">Tip: If you want real photos, upload 8 images and I’ll swap them in.</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div class="hd">Maurice's Interests</div>
+          <div class="bd twoCols">
+            <div class="pill">
+              <div class="t">General</div>
+              <ul>
+                <li>Automation</li>
+                <li>Full-stack dev</li>
+                <li>AI media workflows</li>
+                <li>Game dev</li>
+                <li>Hackathons</li>
+              </ul>
+            </div>
+            <div class="pill">
+              <div class="t">Tech Stack</div>
+              <ul>
+                <li>React</li>
+                <li>TypeScript / JavaScript</li>
+                <li>HTML / CSS</li>
+                <li>Python</li>
+                <li>Three.js</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div class="hd">Contacting Maurice</div>
+          <div class="bd" style="font-size:12px">
+            <div>• Email: <a href="mailto:mrthomaslmg@gmail.com">mrthomaslmg@gmail.com</a></div>
+            <div>• Phone: (737) 497-1806</div>
+            <div>• LinkedIn: <a href="https://www.linkedin.com/in/mrt45">mrt45</a></div>
+            <div>• GitHub: <a href="https://github.com/dktrn9ne">dktrn9ne</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+        <div class="card">
+          <div class="bd">
+            <div class="hero">Maurice is in your extended network</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div class="hd">Maurice's Latest Blog Entry <span class="muted">(Resume Updates)</span></div>
+          <div class="bd post">
+            <div class="line">• Shipped automation for AI media + livestream/game workflows <span class="muted">(view more)</span></div>
+            <div class="line">• Hackathon wins: Consensus 2023 &amp; 2024 <span class="muted">(view more)</span></div>
+            <div class="line">• Portfolio: <a href="https://github.com/dktrn9ne">github.com/dktrn9ne</a> <span class="muted">(view more)</span></div>
+          </div>
+        </div>
+
+        <div class="card aboutMe" style="margin-top:12px">
+          <div class="hd">Maurice's Blurb</div>
+          <div class="bd" style="font-size:13px">
+            <div><strong>About me:</strong></div>
+            <p style="margin:6px 0 0 0">
+              Full-stack developer and automation specialist focused on AI media generation, livestream mechanisms, and interactive experiences. I build fast, ship prototypes, and turn messy processes into repeatable systems.
+            </p>
+          </div>
+        </div>
+
+        <div class="card" id="resume" style="margin-top:12px">
+          <div class="hd">Resume</div>
+          <div class="bd resume">
+            <h3>Experience</h3>
+
+            <div class="role">Library Labs — AI Media Generation / Software Development / Automation <span>Remote • 2023–Present</span></div>
+            <ul>
+              <li>Built and automated complex production workflows for AI media generation, livestream mechanisms, and game development to improve repeatability and reduce manual overhead.</li>
+              <li>Contributed to full-stack development and rapid prototyping using React, TypeScript, JavaScript, HTML/CSS, and Python.</li>
+              <li>Developed interactive and visual experiences using Three.js; supported experimentation across machine learning and game development.</li>
+            </ul>
+
+            <div class="role">Toppan Photomasks — Lithography / Dry Etch Technician <span>Round Rock, TX • 2019–2023</span></div>
+            <ul>
+              <li>Supported lithography and dry etch operations in a semiconductor photomask environment with a focus on process discipline, documentation, and quality.</li>
+              <li>Executed technical procedures and troubleshooting in a production setting; brought an engineer-level mindset to root-cause analysis and continuous improvement.</li>
+            </ul>
+
+            <div class="role">Meta (Facebook) — Policy Advisor (FB Marketplace, Ad Ops) <span>Austin, TX / Remote • 2016–2018</span></div>
+            <ul>
+              <li>Provided policy and operational support within Facebook Marketplace with ties to advertising operations workflows.</li>
+              <li>Partnered cross-functionally to support enforcement, escalations, and operational execution.</li>
+            </ul>
+
+            <div class="role">Cheri Media — Intern / Staff Writer <span>Remote • 2014–2015</span></div>
+            <ul>
+              <li>Wrote and edited content on deadline; supported editorial operations and publishing cadence.</li>
+            </ul>
+
+            <h3>Projects &amp; Accolades</h3>
+            <ul>
+              <li><strong>Consensus 2023</strong> — Buidlbox Hackathon Winner: <strong>Himitsu</strong> (Wanchain)</li>
+              <li><strong>Consensus 2024</strong> — Hackathon Winner: <strong>Meme Coin Lottery</strong></li>
+            </ul>
+
+            <h3>Education</h3>
+            <div class="skillsLine">Santa Monica College — Computer Science (Major) <span class="muted">(coursework; no degree listed)</span></div>
+
+            <h3>Skills</h3>
+            <div class="skillsLine"><strong>Full Stack:</strong> React, TypeScript, JavaScript, HTML, CSS</div>
+            <div class="skillsLine"><strong>3D/Web:</strong> Three.js</div>
+            <div class="skillsLine"><strong>Backend/Scripting:</strong> Python</div>
+            <div class="skillsLine"><strong>Focus:</strong> automation, AI media generation, internal tools</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
