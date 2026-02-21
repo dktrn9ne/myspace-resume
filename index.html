@@ -31,16 +31,21 @@
     .bgVideo iframe{position:absolute; top:50%; left:50%; width:100vw; height:100vh; min-width:100vw; min-height:100vh; transform:translate(-50%,-50%) scale(1.25); border:0; pointer-events:none;}
     .bgOverlay{position:fixed; inset:0; z-index:-1; background:transparent;}
 
-    /* Bottom music player */
-    .musicBar{position:fixed; left:0; right:0; bottom:0; z-index:9999; padding:8px 10px; background:rgba(0,0,0,.65); border-top:1px solid rgba(255,255,255,.18); backdrop-filter: blur(6px);}
+    /* Bottom music player (custom controls via YouTube IFrame API) */
+    .musicBar{position:fixed; left:0; right:0; bottom:0; z-index:9999; padding:10px 12px; background:rgba(0,0,0,.70); border-top:1px solid rgba(255,255,255,.18); backdrop-filter: blur(6px);}
     .musicBar .inner{max-width:980px; margin:0 auto; display:flex; align-items:center; gap:10px;}
-    .musicBar .label{color:#fff; font-weight:800; font-size:12px; letter-spacing:.2px; white-space:nowrap;}
-    .musicBar iframe{width:360px; max-width:70vw; height:56px; border:0;}
+    .musicBar .label{color:#fff; font-weight:900; font-size:12px; letter-spacing:.2px; white-space:nowrap; opacity:.9;}
+    .musicMeta{color:#fff; font-size:12px; min-width:0;}
+    .musicMeta .title{font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52vw;}
+    .musicMeta .artist{opacity:.85; font-weight:700;}
+    .musicBtn{width:34px; height:34px; border-radius:6px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.10); color:#fff; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-weight:900;}
+    .musicBtn:hover{background:rgba(255,255,255,.16)}
+    .ytMount{margin-left:auto; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none;} /* keep player invisible */
     @media (max-width:520px){
-      .musicBar iframe{width:100%; max-width:100%;}
-      .musicBar .inner{flex-direction:column; align-items:stretch;}
+      .musicMeta .title{max-width:80vw;}
+      .musicBar .inner{gap:8px;}
     }
-    body{padding-bottom:88px;} /* prevent content from hiding behind player */
+    body{padding-bottom:96px;} /* prevent content from hiding behind player */
 
     /* Top "MySpace" chrome */
     .topbar{
@@ -385,16 +390,85 @@
 
     </div>
   </div>
-  <!-- Bottom music player (user-controlled; not autoplay) -->
-  <div class="musicBar">
+  <!-- Bottom music player (custom controls) -->
+  <div class="musicBar" role="region" aria-label="Music player">
     <div class="inner">
       <div class="label">Now Playing</div>
-      <iframe
-        src="https://www.youtube.com/embed/wuWJUd8nN4w?controls=1&modestbranding=1&rel=0&playsinline=1"
-        title="Music player"
-        allow="encrypted-media; fullscreen"
-      ></iframe>
+      <button class="musicBtn" id="musicToggle" type="button" aria-label="Play/Pause">Play</button>
+      <div class="musicMeta">
+        <div class="title" id="musicTitle">Loading…</div>
+        <div class="artist" id="musicArtist">—</div>
+      </div>
+      <div class="ytMount"><div id="ytPlayer"></div></div>
     </div>
   </div>
+
+  <script>
+    // YouTube IFrame API (for play/pause + custom UI)
+    const MUSIC_VIDEO_ID = 'wuWJUd8nN4w';
+    const MUSIC_TITLE = 'Grinding All My Life';
+    const MUSIC_ARTIST = 'Nipsey Hussle';
+
+    const $toggle = document.getElementById('musicToggle');
+    const $title = document.getElementById('musicTitle');
+    const $artist = document.getElementById('musicArtist');
+
+    $title.textContent = MUSIC_TITLE;
+    $artist.textContent = MUSIC_ARTIST;
+
+    let ytPlayer = null;
+    let isReady = false;
+
+    function setBtnState(state){
+      // state: 'play' | 'pause'
+      if(!$toggle) return;
+      $toggle.textContent = state === 'pause' ? 'Pause' : 'Play';
+    }
+
+    setBtnState('play');
+
+    // Load API
+    (function(){
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+    })();
+
+    // Called by the API
+    window.onYouTubeIframeAPIReady = function(){
+      ytPlayer = new YT.Player('ytPlayer', {
+        height: '1',
+        width: '1',
+        videoId: MUSIC_VIDEO_ID,
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0
+        },
+        events: {
+          onReady: function(){
+            isReady = true;
+          },
+          onStateChange: function(e){
+            // 1 = playing, 2 = paused, 0 = ended
+            if(e.data === 1) setBtnState('pause');
+            if(e.data === 2 || e.data === 0) setBtnState('play');
+          }
+        }
+      });
+    };
+
+    $toggle?.addEventListener('click', function(){
+      if(!isReady || !ytPlayer) return;
+      const st = ytPlayer.getPlayerState();
+      // If playing -> pause, else play
+      if(st === 1) ytPlayer.pauseVideo();
+      else ytPlayer.playVideo();
+    });
+  </script>
 </body>
 </html>
